@@ -1,12 +1,12 @@
 var path = require('path');
-var webpack = require('webpack');
-
+var HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
     devServer: {
-        inline: true,
-        contentBase: './src',
-        port: 3000
-    },
+    historyApiFallback: true,
+    inline: true,
+    contentBase: './src',
+    port: 3000
+  },
     devtool: 'cheap-module-eval-source-map',
     entry: './dev/js/index.js',
     module: {
@@ -24,9 +24,13 @@ module.exports = {
     },
     output: {
         path: 'src',
-        filename: 'js/bundle.min.js'
+        filename: 'js/bundle.min.js',
+        publicPath: '/'
     },
     plugins: [
-        new webpack.optimize.OccurrenceOrderPlugin()
+        new HtmlWebpackPlugin({
+            template: 'src/index.html',
+            inject: false
+        })
     ]
 };
