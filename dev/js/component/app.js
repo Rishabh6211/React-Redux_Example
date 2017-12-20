@@ -4,11 +4,15 @@ import UserInformation from './userInformation';
 import SignUp from './signup';
 import LoginForm from './login';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom'
+//import {data} from '../action/index';
+import MyApp from './showData'
 export default class App extends Component{  //create a component here for display data  
-
+	
+	
 		
-	render(){
+	render(){debugger
 
+		console.log("dataa",MyApp);
 
 		return(
 			<div>
@@ -18,7 +22,8 @@ export default class App extends Component{  //create a component here for displ
 				   <Route exact path="/" render={() => (<Redirect to="/login" />)} /> 
 				   <Route exact path="/login" component={LoginForm} onSubmit={this.submit}/>  
 				   <Route exact path="/signup" component={SignUp} />
-				   <Route path="/userinformation" component={UserInformation} />  
+				   <Route path="/userinformation" component={UserInformation} /> 
+				   <Route path="/data" component={MyApp} /> 
 				</Switch>			
 				</BrowserRouter>
 				{/*<h2>UserList:</h2>

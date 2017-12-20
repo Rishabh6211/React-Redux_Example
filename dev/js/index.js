@@ -6,8 +6,11 @@ import allReducer from './reducers' //store reducers here
 import ReactDom from 'react-dom';
 import {Provider} from 'react-redux';
 import App from './component/app'
+import thunk from 'redux-thunk';
+import { applyMiddleware, compose } from 'redux';
 //provide the all store date to containers
-const store = createStore(allReducer); //store that javascript object here
+ //store that javascript object here
+const store = createStore(allReducer, applyMiddleware(thunk));
 ReactDOM.render(
    <Provider store={store}> 
    		<App />
