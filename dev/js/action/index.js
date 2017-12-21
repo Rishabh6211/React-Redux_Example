@@ -29,3 +29,34 @@ export function Get_data(){
       }
 	
 }
+
+// action to post user data
+export function Register(props){
+	console.log("formdata",props);
+	return dispatch => {
+		fetch(`${ROOT_URL}/register`, {      
+			method: 'POST',      
+			headers: {'Content-Type': 'application/json'},      
+			body: JSON.stringify(props)
+		})
+		.then(res => res.json())
+	}
+}
+export function Login(props){
+	console.log("formdata",props);
+	return dispatch => {
+		fetch(`${ROOT_URL}/login`, {      
+			method: 'POST',      
+			headers: {'Content-Type': 'application/json'},      
+			body: JSON.stringify(props)
+		})
+		.then(res => res.json())
+		.then(users => {
+      		dispatch({
+					type: 'GET_DATA',
+					payload : users
+				});
+		console.log(users)
+      	});
+	}
+}

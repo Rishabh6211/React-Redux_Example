@@ -1,5 +1,7 @@
-import React from 'react'
+import React,{Component} from 'react'
 import { Field, reduxForm } from 'redux-form'
+import {Register} from '../action/index'
+import { connect } from 'react-redux';
 
 const required = value => (value ? undefined : 'Required')
 const maxLength = max => value =>
@@ -48,70 +50,102 @@ const renderField = ({
     </div>
   </div>
 )
-
 const submit = values=>{
     console.log("hello",values);
   }
 
-const SignUp = props => {
-  const { handleSubmit, pristine, reset, submitting } = props
-  return (
-    <form className="row card form-group col-md-4 col-md-offset-4" onSubmit={handleSubmit(submit)}  >
-      <Field
-        name="username"
-        className="form-control" 
-        type="text"
-        component={renderField}
-        label="Username"
-        validate={[required, maxLength15, minLength2]}
-        warn={alphaNumeric}
-      />
-      <Field
-        name="email"
-        className="form-control" 
-        type="email"
-        component={renderField}
-        label="Email"
-        validate={email}
-        warn={aol}
-      />
-      <Field
-        name="password"
-        className="form-control" 
-        type="password"
-        component={renderField}
-        label="Password"
-        validate={required}
-      />
-      <Field
-        name="age"
-        className="form-control" 
-        type="number"
-        component={renderField}
-        label="Age"
-        validate={[required, number, minValue18]}
-        warn={tooOld}
-      />
-      <Field
-        name="phone"
-        className="form-control" 
-        type="number"
-        component={renderField}
-        label="Phone number"
-        validate={[required, phoneNumber]}
-      />
-      <div>
-        <button type="submit" className="btn btn-primary" disabled={submitting}>
-          Submit
-        </button>
-        <button type="button" className="btn btn-default" disabled={pristine || submitting} onClick={reset}>
-          Clear Values
-        </button>
-      </div>
-    </form>
-  )
+class SignUp extends Component {
+
+  constructor(props){
+    super()
+
+  }
+  onSubmit(event) {
+  console.log('values in form',event.username)
+       let prop = {
+        username: event.username,
+        password: event.password,
+        email: event.email,
+        age: event.age,
+        phone: event.phone,
+       }
+       this.props.Register(prop)
 }
 
-export default reduxForm({
-  form: 'fieldLevelValidation' // a unique identifier for this form
-})(SignUp)
+  render(){
+    const {fields:{username,email,password,age,phone}, handleSubmit, pristine, reset, submitting } = this.props
+    return (
+      <form className="row card form-group col-md-4 col-md-offset-4" onSubmit={handleSubmit(this.onSubmit.bind(this))}  >
+        <Field
+          name="username"
+          className="form-control" 
+          type="text"
+          component={renderField}
+          label="Username"
+          validate={[required, maxLength15, minLength2]}
+          warn={alphaNumeric}
+          {...username}
+        />
+        <Field
+          name="email"
+          className="form-control" 
+          type="email"
+          component={renderField}
+          label="Email"
+          validate={email}
+          warn={aol}
+          {...email}
+        />
+        <Field
+          name="password"
+          className="form-control" 
+          type="password"
+          component={renderField}
+          label="Password"
+          validate={required}
+          {...password}
+        />
+        <Field
+          name="age"
+          className="form-control" 
+          type="number"
+          component={renderField}
+          label="Age"
+          validate={[required, number, minValue18]}
+          warn={tooOld}
+          {...age}
+        />
+        <Field
+          name="phone"
+          className="form-control" 
+          type="number"
+          component={renderField}
+          label="Phone number"
+          validate={[required, phoneNumber]}
+          {...phone}
+        />
+        <div>
+          <button type="submit" className="btn btn-primary" disabled={submitting}>
+            Submit
+          </button>
+          <button type="button" className="btn btn-default" disabled={pristine || submitting} onClick={reset}>
+            Clear Values
+          </button>
+        </div>
+      </form>
+    )
+  }
+}
+
+// export (reduxForm({
+//   form: 'SignUp', // a unique identifier for this form
+//   fields:['username','email','password','age','phone']
+// },null,{Register})(SignUp))
+
+
+SignUp = reduxForm({
+  form: 'SignupForm',
+  fields:['username','email','password','age','phone']
+  })(SignUp);
+
+export default connect(null, {Register})(SignUp)

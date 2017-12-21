@@ -1,6 +1,9 @@
-import React from 'react'
+import React,{Component,propTypes} from 'react'
 import { Field, reduxForm } from 'redux-form'
 import { Link } from 'react-router-dom'
+import {Login} from '../action/index'
+import { connect } from 'react-redux';
+require('../../scss/style.scss');
 
 const required = value => (value ? undefined : 'Required')
 const maxLength = max => value =>
@@ -53,48 +56,75 @@ const submit = values=>{
     console.log("hello",values);
   }
 
-const LoginForm = props => {
-  const { handleSubmit, pristine, reset, submitting } = props
-  return (
-    <form className="row card form-group col-md-4 col-md-offset-4" onSubmit={handleSubmit(submit)}>
-      <Field
-        name="username"
-        className="form-control" 
-        type="text"
-        component={renderField}
-        label="Username"
-        validate={[required, maxLength15, minLength2]}
-        warn={alphaNumeric}
-      />
-      <Field
-        name="email"
-        className="form-control" 
-        type="email"
-        component={renderField}
-        label="Email"
-        validate={email}
-        warn={aol}
-      />
-      <Field
-        name="password"
-        className="form-control" 
-        type="password"
-        component={renderField}
-        label="Password"
-        validate={required}
-      />
-      <div>
-        <button type="submit" className="btn btn-primary" disabled={submitting }   >
-          Submit
-        </button>
-        <button type="button" className="btn btn-success" >
-          <Link to='/signup'>Signup</Link>
-        </button>
-      </div>
-    </form>
-  )
+class  LoginForm extends Component {
+
+  constructor(props){
+    super()
+  }
+
+
+  onSubmit(event){
+    let prop = {
+      username : event.username,
+      email: event.email,
+      password: event.password
+    }
+    this.props.Login(prop)
+  }
+  loader: true
+  render(){
+    const { fields:{username,email,password}, handleSubmit, pristine, reset, submitting } = this.props
+    return (
+      <form className="row card form-group col-md-4 col-md-offset-4" onSubmit={handleSubmit(this.onSubmit.bind(this))}>
+        <Field
+          name="username"
+          className="form-control" 
+          type="text"
+          component={renderField}
+          label="Username"
+          validate={[required, maxLength15, minLength2]}
+          warn={alphaNumeric}
+          {...username}
+        />
+        <Field
+          name="email"
+          className="form-control" 
+          type="email"
+          component={renderField}
+          label="Email"
+          validate={email}
+          warn={aol}
+          {...email}
+        />
+        <Field
+          name="password"
+          className="form-control" 
+          type="password"
+          component={renderField}
+          label="Password"
+          validate={required}
+          {...password}
+        />
+        <div>
+          <button type="submit" className="btn btn-primary" disabled={submitting }   >
+            <Link to='/index'>Submit</Link>
+          </button>
+          <button type="button" className="btn btn-success" >
+            <Link to='/signup'>Signup</Link>
+          </button>
+        </div>
+      </form>
+    )
+  }
 }
 
-export default reduxForm({
-  form: 'fieldLevelValidation' // a unique identifier for this form
-})(LoginForm)
+/*export default reduxForm({
+  form: 'fieldLevelValidation' 
+})(LoginForm)*/
+
+LoginForm = reduxForm({
+  form: 'LoginForm',
+  fields:['username','email','password']
+  })(LoginForm);
+
+export default connect(null, {Login})(LoginForm)
